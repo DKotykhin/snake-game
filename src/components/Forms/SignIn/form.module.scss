@@ -1,0 +1,63 @@
+@import "constants/constants.scss";
+
+.form {
+  .form__paper {
+    margin: 32px 0;
+    padding: 16px;
+
+    .form__title {
+      font-size: 32px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .form__avatar {
+      width: 80px;
+      height: 80px;
+      margin: 24px auto;
+    }
+
+    .form__box {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    input[type="checkbox"] {
+      display: inline;
+      width: 25px;
+      height: 25px;
+      margin-right: 15px;
+    }
+
+    .form__checkbox {
+      cursor: pointer;
+      width: 150px;
+      margin-left: 50px;
+    }
+  }
+
+  .form__subtitle {
+    text-align: center;
+    color: $color_lightGrey;
+
+    a {
+      color: $color_mint;
+    }
+  }
+
+  .form__submit_button {
+    display: block;
+    margin: 0 auto;
+    font-size: 1rem;
+  }
+
+  .form__return_button {
+    display: block;
+    text-align: center;
+    margin: 20px auto;
+    font-size: 1rem;
+    color: $color_mint;
+    width: fit-content;
+  }
+}

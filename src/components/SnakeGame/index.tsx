@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Box, Button } from '@mui/material';
 
 import { feedValue } from './feedValue';
-import { CustomDialog } from '../CustomDialog/CustomDialog';
+import { CustomDialog } from '../CustomDialog';
 
 import styles from './snakeGame.module.scss';
 
@@ -16,6 +17,7 @@ const SnakeGame: React.FC = () => {
   const [level, setLevel] = useState(1);
 
   const canvasRef = useRef(null);
+  const id = true;
 
   useEffect(() => {
     if (level === 1) {
@@ -155,7 +157,6 @@ const SnakeGame: React.FC = () => {
 
   return (
     <div className={styles.snake_wrapper}>
-      <h1 className={styles.title}>Snake Game</h1>
       <Box className={styles.level_box}>
         {Array.from({ length: 3 }, (_, i) => (
           <Button
@@ -165,8 +166,10 @@ const SnakeGame: React.FC = () => {
             onClick={() => setLevel(i + 1)}
             variant={level === i + 1 ? 'outlined' : 'text'}
             sx={{ minWidth: '150px' }}
+            disabled={i !== 0 && !id}
           >
             Level {i + 1}
+            {i !== 0 && !id ? '*' : ''}
           </Button>
         ))}
       </Box>
@@ -190,6 +193,11 @@ const SnakeGame: React.FC = () => {
           {gameStatus.start ? (gameStatus.pause ? 'Resume' : 'Pause') : 'Start'}
         </Button>
       </Box>
+      {!id && (
+        <div className={styles.additional_text}>
+          <p>* you need to <Link to={'/sign-in'}>Sign in</Link> to unlock this level</p>
+        </div>
+      )}
       <CustomDialog
         open={gameStatus.over}
         handleClose={() => setGameStatus((status) => ({ ...status, over: false }))}

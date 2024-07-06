@@ -1,0 +1,60 @@
+@import "constants/constants.scss";
+
+.container {
+  display: flex;
+  justify-content: center;
+
+  .home_wrapper {
+    width: 100%;
+    max-width: 1340px;
+    padding: 20px 50px;
+
+    .home_title {
+      font-size: 4rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+      font-family: Nabla;
+    }
+
+    .home_subtitle {
+      font-size: 2rem;
+      margin: 20px 0;
+    }
+
+    .home_text {
+      line-height: 24px;
+    }
+
+    ul {
+      margin-left: 30px;
+
+      li {
+        margin: 3px 0;
+
+        span {
+          font-weight: 700;
+        }
+      }
+    }
+
+    .start_button {
+      display: flex;
+      justify-content: center;
+      font-size: 3rem;
+      text-decoration: none;
+      color: $color_mint;
+      font-weight: 700;
+      margin: 50px 0;
+      text-shadow:
+        0 0 7px #fff,
+        0 0 10px #fff,
+        0 0 21px #fff,
+        0 0 42px $color_mint,
+        0 0 82px $color_mint,
+        0 0 92px $color_mint,
+        0 0 102px $color_mint,
+        0 0 151px $color_mint;
+    }
+  }
+}

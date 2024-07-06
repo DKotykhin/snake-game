@@ -1,0 +1,39 @@
+@import "constants/constants.scss";
+
+.header {
+  display: flex;
+  justify-content: center;
+  min-height: 80px;
+  background-color: $color_grey;
+  width: 100%;
+
+  .header_wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    max-width: 1340px;
+    width: 100%;
+    padding: 0 50px;
+
+    .logo_wrapper {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      text-decoration: none;
+
+      .header__text {
+        color: #fff;
+        font-weight: 600;
+        font-size: 18px;
+      }
+    }
+
+    .link_text {
+      color: #fff;
+      font-weight: 600;
+      font-size: 16px;
+      text-decoration: none;
+    }
+  }
+}
