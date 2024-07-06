@@ -4,10 +4,18 @@
 
   .title {
     text-align: center;
-    font-size: 24px;
+    font-size: 48px;
     font-weight: bold;
-    margin: 20px 0;
+    margin: 10px 0;
     text-transform: uppercase;
+    font-family: Nabla;
+  }
+
+  .level_box {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 16px 0;
   }
 
   .game_board {
@@ -17,78 +25,23 @@
     margin: 20px auto;
   }
 
-  .result_box {
-    // height: 30px;
-
-    .result_wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-
-      .game_over {
-        text-align: center;
-        color: #f15922;
-        font-size: 24px;
-        font-weight: bold;
-      }
-
-      .score_wrapper {
-        display: flex;
-        gap: 10px;
-
-        .score_text {
-          font-size: 18px;
-
-          span {
-            font-weight: bold;
-          }
-        }
-      }
-    }
+  .status_button {
+    display: flex;
+    justify-content: center;
+    margin: 24px 0;
   }
+}
 
-  .start_button {
-    display: block;
-    margin: 24px auto;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
+.score_wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 
-    &:hover {
-      background-color: #0056b3;
-      transition: all 0.3s ease-in-out;
-    }
+  .score_text {
+    font-size: 24px;
 
-    &:disabled {
-      background-color: #a3a1a1;
-      cursor: not-allowed;
-    }
-  }
-
-  .pause_button {
-    display: block;
-    margin: 24px auto;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-
-    &:hover {
-      background-color: #0056b3;
-      transition: all 0.3s ease-in-out;
-    }
-
-    &:disabled {
-      background-color: #a3a1a1;
-      cursor: not-allowed;
+    span {
+      font-weight: bold;
     }
   }
 }

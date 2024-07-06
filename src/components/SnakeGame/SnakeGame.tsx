@@ -1,31 +1,44 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Box, Button } from '@mui/material';
 
 import { feedValue } from './feedValue';
+import { CustomDialog } from '../CustomDialog/CustomDialog';
+
 import styles from './snakeGame.module.scss';
 
-const SnakeGame = () => {
+const SnakeGame: React.FC = () => {
   const [snake, setSnake] = useState([{ x: 10, y: 10 }]);
   const [food, setFood] = useState({ x: 15, y: 15, value: 1 });
   const [direction, setDirection] = useState({ x: 1, y: 0 });
   const [speed, setSpeed] = useState(500);
-  const [gameOver, setGameOver] = useState(false);
+  const [gameStatus, setGameStatus] = useState({ start: false, pause: false, over: false });
   const [bestScore, setBestScore] = useState(0);
-  const [pause, setPause] = useState(false);
+  const [level, setLevel] = useState(1);
 
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    if (gameOver) return;
-    if (speed === 200) return;
-    if (snake.length <= 50) return;
-    if (snake.length > 50 && snake.length <= 100 && speed === 500) {
+    if (level === 1) {
+      setSpeed(500);
+    } else if (level === 2) {
       setSpeed(400);
-    } else if (snake.length > 100 && snake.length <= 150 && speed === 400) {
+    } else if (level === 3) {
       setSpeed(300);
-    } else if (snake.length > 150 && speed === 300) {
-      setSpeed(200);
     }
-  }, [gameOver, snake, speed]);
+  }, [level]);
+
+  useEffect(() => {
+    if (gameStatus.over) return;
+    if (speed === 150) return;
+    if (snake.length <= 50) return;
+    if (snake.length > 50 && snake.length <= 100) {
+      level === 1 ? setSpeed(450) : level === 2 ? setSpeed(350) : setSpeed(250);
+    } else if (snake.length > 100 && snake.length <= 150) {
+      level === 1 ? setSpeed(400) : level === 2 ? setSpeed(300) : setSpeed(200);
+    } else if (snake.length > 150) {
+      level === 1 ? setSpeed(350) : level === 2 ? setSpeed(250) : setSpeed(150);
+    }
+  }, [gameStatus.over, level, snake, speed]);
 
   useEffect(() => {
     const handleKeydown = (e: { key: string }) => {
@@ -52,10 +65,11 @@ const SnakeGame = () => {
   }, [direction]);
 
   useEffect(() => {
-    if (gameOver) return;
+    if (!gameStatus.start) return;
+    if (gameStatus.over) return;
 
     const moveSnake = setInterval(() => {
-      if (pause) return;
+      if (gameStatus.pause) return;
       setSnake((prevSnake) => {
         const newSnake = [...prevSnake];
         const head = { ...newSnake[0] };
@@ -70,7 +84,7 @@ const SnakeGame = () => {
           newSnake.some((segment) => segment.x === head.x && segment.y === head.y)
         ) {
           bestScore < snake.length - 1 && setBestScore(snake.length - 1);
-          setGameOver(true);
+          setGameStatus({ start: false, pause: false, over: true });
           return prevSnake;
         }
 
@@ -93,7 +107,7 @@ const SnakeGame = () => {
     }, speed);
 
     return () => clearInterval(moveSnake);
-  }, [snake, direction, food, speed, gameOver, bestScore, pause]);
+  }, [snake, direction, food, speed, bestScore, gameStatus.start, gameStatus.over, gameStatus.pause]);
 
   useEffect(() => {
     const canvas = canvasRef.current as unknown as HTMLCanvasElement;
@@ -142,38 +156,55 @@ const SnakeGame = () => {
   return (
     <div className={styles.snake_wrapper}>
       <h1 className={styles.title}>Snake Game</h1>
+      <Box className={styles.level_box}>
+        {Array.from({ length: 3 }, (_, i) => (
+          <Button
+            key={i}
+            color='warning'
+            size='large'
+            onClick={() => setLevel(i + 1)}
+            variant={level === i + 1 ? 'outlined' : 'text'}
+            sx={{ minWidth: '150px' }}
+          >
+            Level {i + 1}
+          </Button>
+        ))}
+      </Box>
       <canvas ref={canvasRef} width='500' height='500' className={styles.game_board} />
-      <div className={styles.result_box}>
-        {gameOver && (
-          <div className={styles.result_wrapper}>
-            <p className={styles.game_over}>Game Over</p>
-            <div className={styles.score_wrapper}>
-              <p className={styles.score_text}>
-                Score: <span>{snake.length - 1}</span>
-              </p>
-              <p className={styles.score_text}>
-                Best Score: <span>{bestScore}</span>
-              </p>
-            </div>
+      <Box className={styles.status_button}>
+        <Button
+          variant='outlined'
+          color='success'
+          size='large'
+          onClick={() =>
+            gameStatus.over || !gameStatus.start
+              ? (setGameStatus((status) => ({ ...status, start: true, over: false })),
+                setSnake([{ x: 10, y: 10 }]),
+                setFood({ x: 15, y: 15, value: 1 }),
+                setDirection({ x: 1, y: 0 }))
+              : gameStatus.pause
+                ? setGameStatus((status) => ({ ...status, pause: false }))
+                : setGameStatus((status) => ({ ...status, pause: true }))
+          }
+        >
+          {gameStatus.start ? (gameStatus.pause ? 'Resume' : 'Pause') : 'Start'}
+        </Button>
+      </Box>
+      <CustomDialog
+        open={gameStatus.over}
+        handleClose={() => setGameStatus((status) => ({ ...status, over: false }))}
+        title='Game Over'
+        description={
+          <div className={styles.score_wrapper}>
+            <p className={styles.score_text}>
+              Score: <span>{snake.length - 1}</span>
+            </p>
+            <p className={styles.score_text}>
+              Best Score: <span>{bestScore}</span>
+            </p>
           </div>
-        )}
-      </div>
-      <button
-        disabled={!gameOver}
-        className={styles.start_button}
-        onClick={() => {
-          setGameOver(false);
-          setSnake([{ x: 10, y: 10 }]);
-          setFood({ x: 15, y: 15, value: 1 });
-          setDirection({ x: 1, y: 0 });
-          setSpeed(500);
-        }}
-      >
-        Start
-      </button>
-      <button className={styles.pause_button} onClick={() => setPause(!pause)}>
-        {pause ? 'Resume' : 'Pause'}
-      </button>
+        }
+      />
     </div>
   );
 };
