@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mode, Resolver, SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
 
 import { Button, Container, Typography, Box, Avatar, Paper } from '@mui/material';
 
@@ -32,7 +34,17 @@ const ForgotPasswordForm: React.FC = () => {
   } = useForm<EmailTypes>(EmailFormValidation);
 
   const onSubmit: SubmitHandler<EmailTypes> = async (data): Promise<void> => {
-    console.log(data);
+    axios({
+      method: 'POST',
+      url: `${process.env.REACT_APP_API_URL}/auth/reset-password`,
+      data,
+    })
+      .then(() => {
+        toast.success('Please, check your email');
+      })
+      .catch((error) => {
+        toast.error(error.response.data?.message || error.message);
+      });
   };
 
   return (

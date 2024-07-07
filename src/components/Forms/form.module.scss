@@ -28,6 +28,13 @@
       flex-direction: column;
       gap: 24px;
 
+      .forgot_password {
+        text-align: right;
+        a {
+          color: $color_lightGrey;
+        }
+      }
+
       .form__submit_button {
         display: block;
         margin: 0 auto;

@@ -1,12 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Mode, Resolver, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 import { Button, Container, Typography, Box, Avatar, Paper } from '@mui/material';
 
 import { EmailField, PasswordField } from 'components/Inputs/_index';
 import { signInValidationSchema, SignInTypes } from 'validation/userValidation';
+import { useUserStore } from 'store/userStore';
 
 import styles from '../form.module.scss';
 
@@ -26,6 +30,9 @@ const SignInFormValidation: SignInFormValidationTypes = {
 };
 
 const LoginForm: React.FC = () => {
+  const navigate = useNavigate();
+  const addUser = useUserStore((state) => state.addUser);
+
   const {
     control,
     handleSubmit,
@@ -33,7 +40,21 @@ const LoginForm: React.FC = () => {
   } = useForm<SignInTypes>(SignInFormValidation);
 
   const onSubmit: SubmitHandler<SignInTypes> = async (data): Promise<void> => {
-    console.log(data);
+    axios({
+      method: 'POST',
+      url: `${process.env.REACT_APP_API_URL}/auth/sign-in`,
+      data,
+    })
+      .then((res) => {
+        Cookies.set('token', res.data?.auth_token, {
+          expires: 2,
+        });
+        addUser(res.data.user);
+        navigate('/');
+      })
+      .catch((err) => {
+        toast.error(err.response.data?.message?.toString() || err.message || 'Something went wrong');
+      });
   };
 
   return (
@@ -52,6 +73,9 @@ const LoginForm: React.FC = () => {
             error={errors.password}
             control={control}
           />
+          <Box className={styles.forgot_password}>
+            <Link to='/forgot-password'>Forgot password?</Link>
+          </Box>
           <Button className={styles.form__submit_button} disabled={!isValid} type='submit'>
             Submit
           </Button>

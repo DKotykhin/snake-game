@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mode, Resolver, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 import { Button, Container, Typography, Box, Avatar, Paper } from '@mui/material';
 
@@ -35,6 +37,17 @@ const SignUpForm: React.FC = () => {
 
   const onSubmit: SubmitHandler<SignUpTypes> = async (data): Promise<void> => {
     console.log(data);
+    axios({
+      method: 'POST',
+      url: `${process.env.REACT_APP_API_URL}/auth/sign-up`,
+      data,
+    })
+      .then((res) => {
+        toast.success('Check your email to confirm registration');
+      })
+      .catch((err) => {
+        toast.error(err.response.data?.message?.toString() || err.message || 'Something went wrong');
+      });
   };
 
   return (

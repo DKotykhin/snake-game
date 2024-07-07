@@ -1,7 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Mode, Resolver, SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
 
 import { Button, Container, Typography, Box, Avatar, Paper } from '@mui/material';
 
@@ -25,7 +27,9 @@ const EmailFormValidation: SetNewPasswordFormValidationTypes = {
   mode: 'onChange',
 };
 
-const SetNewPasswordForm: React.FC<{ token?: string }> = () => {
+const SetNewPasswordForm: React.FC<{ token?: string }> = ({ token }) => {
+  const navigate = useNavigate();
+
   const {
     control,
     handleSubmit,
@@ -34,6 +38,18 @@ const SetNewPasswordForm: React.FC<{ token?: string }> = () => {
 
   const onSubmit: SubmitHandler<SetNewPasswordTypes> = async (data): Promise<void> => {
     console.log(data);
+    axios({
+      method: 'POST',
+      url: `${process.env.REACT_APP_API_URL}/auth/new-password/${token}`,
+      data,
+    })
+      .then(() => {
+        toast.success('Password has been changed');
+        navigate('/sign-in');
+      })
+      .catch((error) => {
+        toast.error(error.response.data?.message || error.message);
+      });
   };
 
   return (

@@ -1,0 +1,15 @@
+@import "constants/constants.scss";
+
+.error_message {
+  color: $color_red;
+  font-size: 2rem;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.loading_message {
+  color: $color_lightGrey;
+  font-size: 2rem;
+  margin-top: 2rem;
+  text-align: center;
+}

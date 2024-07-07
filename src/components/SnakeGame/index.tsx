@@ -5,6 +5,7 @@ import { Box, Button } from '@mui/material';
 import { feedValue } from './feedValue';
 import { CustomDialog } from '../CustomDialog';
 import { gameColors } from './gameColors';
+import { useUserStore } from 'store/userStore';
 
 import styles from './snakeGame.module.scss';
 
@@ -18,7 +19,8 @@ const SnakeGame: React.FC = () => {
   const [level, setLevel] = useState(1);
 
   const canvasRef = useRef(null);
-  const id = true;
+
+  const user = useUserStore((state) => state.userData);
 
   useEffect(() => {
     if (level === 1) {
@@ -169,10 +171,10 @@ const SnakeGame: React.FC = () => {
             onClick={() => setLevel(i + 1)}
             variant={level === i + 1 ? 'outlined' : 'text'}
             sx={{ minWidth: '150px' }}
-            disabled={i !== 0 && !id}
+            disabled={i !== 0 && !user?.id}
           >
             Level {i + 1}
-            {i !== 0 && !id ? '*' : ''}
+            {i !== 0 && !user?.id ? '*' : ''}
           </Button>
         ))}
       </Box>
@@ -196,7 +198,7 @@ const SnakeGame: React.FC = () => {
           {gameStatus.start ? (gameStatus.pause ? 'Resume' : 'Pause') : 'Start'}
         </Button>
       </Box>
-      {!id && (
+      {!user?.id && (
         <div className={styles.additional_text}>
           <p>
             * you need to <Link to={'/sign-in'}>Sign in</Link> to unlock this level
