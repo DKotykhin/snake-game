@@ -8,24 +8,24 @@ import { Button, Container, Typography, Box, Avatar, Paper } from '@mui/material
 import { EmailField, PasswordField } from 'components/Inputs/_index';
 import { signInValidationSchema, SignInTypes } from 'validation/userValidation';
 
-import styles from './form.module.scss';
+import styles from '../form.module.scss';
+
+interface SignInFormValidationTypes {
+  defaultValues: SignInTypes;
+  resolver: Resolver<any>;
+  mode: Mode;
+}
+
+const SignInFormValidation: SignInFormValidationTypes = {
+  defaultValues: {
+    email: '',
+    password: '',
+  },
+  resolver: zodResolver(signInValidationSchema),
+  mode: 'onChange',
+};
 
 const LoginForm: React.FC = () => {
-  interface SignInFormValidationTypes {
-    defaultValues: SignInTypes;
-    resolver: Resolver<any>;
-    mode: Mode;
-  }
-
-  const SignInFormValidation: SignInFormValidationTypes = {
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-    resolver: zodResolver(signInValidationSchema),
-    mode: 'onChange',
-  };
-
   const {
     control,
     handleSubmit,
@@ -52,15 +52,6 @@ const LoginForm: React.FC = () => {
             error={errors.password}
             control={control}
           />
-          {/* <InputLabel className={styles.form__checkbox}>
-            <Controller
-              name='rememberMe'
-              control={control}
-              render={({ field }) => <Checkbox {...field} />}
-              defaultValue={false}
-            />
-            Remember me
-          </InputLabel> */}
           <Button className={styles.form__submit_button} disabled={!isValid} type='submit'>
             Submit
           </Button>

@@ -5,35 +5,34 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Button, Container, Typography, Box, Avatar, Paper } from '@mui/material';
 
-import { EmailField, PasswordField, TextField } from 'components/Inputs/_index';
-import { signUpValidationSchema, SignUpTypes } from 'validation/userValidation';
+import { PasswordField } from 'components/Inputs/_index';
+import { setNewPasswordValidationSchema, SetNewPasswordTypes } from 'validation/userValidation';
 
 import styles from '../form.module.scss';
 
-interface SignUpFormValidationTypes {
-  defaultValues: SignUpTypes;
+interface SetNewPasswordFormValidationTypes {
+  defaultValues: SetNewPasswordTypes;
   resolver: Resolver<any>;
   mode: Mode;
 }
 
-const SignUpFormValidation: SignUpFormValidationTypes = {
+const EmailFormValidation: SetNewPasswordFormValidationTypes = {
   defaultValues: {
-    userName: '',
-    email: '',
     password: '',
+    confirmPassword: '',
   },
-  resolver: zodResolver(signUpValidationSchema),
+  resolver: zodResolver(setNewPasswordValidationSchema),
   mode: 'onChange',
 };
 
-const SignUpForm: React.FC = () => {
+const SetNewPasswordForm: React.FC<{ token?: string }> = () => {
   const {
     control,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<SignUpTypes>(SignUpFormValidation);
+  } = useForm<SetNewPasswordTypes>(EmailFormValidation);
 
-  const onSubmit: SubmitHandler<SignUpTypes> = async (data): Promise<void> => {
+  const onSubmit: SubmitHandler<SetNewPasswordTypes> = async (data): Promise<void> => {
     console.log(data);
   };
 
@@ -41,17 +40,22 @@ const SignUpForm: React.FC = () => {
     <Container maxWidth='xs' className={styles.form}>
       <Paper elevation={10} className={styles.form__paper}>
         <Typography className={styles.form__title} component='h2'>
-          Registration
+          Set New Password
         </Typography>
         <Avatar className={styles.form__avatar} />
         <Box component='form' onSubmit={handleSubmit(onSubmit)} className={styles.form__box}>
-          <TextField label='userName' placeholder='Enter your name' error={errors.userName} control={control} />
-          <EmailField label='Email' placeholder='Enter your email' error={errors.email} control={control} />
           <PasswordField
             name='password'
-            label='Password'
+            label='New Password'
             placeholder='Enter your password'
             error={errors.password}
+            control={control}
+          />
+          <PasswordField
+            name='confirmPassword'
+            label='Confirm Password'
+            placeholder='Confirm your password'
+            error={errors.confirmPassword}
             control={control}
           />
           <Button className={styles.form__submit_button} disabled={!isValid} type='submit'>
@@ -60,7 +64,7 @@ const SignUpForm: React.FC = () => {
         </Box>
       </Paper>
       <Typography className={styles.form__subtitle}>
-        Already have an account? <Link to={'/sign-in'}>Sign In</Link>
+        Don't have an account? <Link to={'/sign-up'}>Sign Up</Link>
       </Typography>
       <Button className={styles.form__return_button} component={Link} to='/'>
         Main Page
@@ -69,4 +73,4 @@ const SignUpForm: React.FC = () => {
   );
 };
 
-export default SignUpForm;
+export default SetNewPasswordForm;

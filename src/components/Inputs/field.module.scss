@@ -1,5 +1,6 @@
+@import "constants/constants.scss";
+
 .field {
-  // margin: 0 30px 30px;
   display: flex;
   flex-direction: column;
 
@@ -8,15 +9,13 @@
   }
 
   .field__control {
-    margin-bottom: 20px;
-
     .field__phone {
       width: 100%;
       height: 56px;
     }
 
     .field__helper {
-      color: #ff0000;
+      color: $color_red;
     }
   }
 }

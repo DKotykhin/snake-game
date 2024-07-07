@@ -18,6 +18,7 @@ export type SignInTypes = z.infer<typeof signInValidationSchema>;
 export const emailValidationSchema = z.object({
   email,
 });
+export type EmailTypes = z.infer<typeof emailValidationSchema>;
 
 export const userNameValidationSchema = z.object({
   userName: textFieldRequired,

@@ -14,8 +14,8 @@ const Header = () => {
           <img src={logo} alt='logo' width={40} />
           <Typography className={styles.header__text}>Snake Game</Typography>
         </Link>
-        <Link to={'sign-in'} className={styles.link_text}>
-          <Typography className={styles.header__text}>Sign In</Typography>
+        <Link to={'sign-in'} className={styles.link}>
+          <Typography className={styles.link__text}>Sign In</Typography>
         </Link>
       </Box>
     </header>

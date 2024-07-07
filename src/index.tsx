@@ -8,6 +8,8 @@ import UserProfile from './pages/UserProfile';
 import SignUpPage from './pages/SignUpPage';
 import SignInPage from './pages/SignInPage';
 import Layout from './Layout';
+import ForgotPasswordPage from 'pages/ForgotPassword';
+import SetNewPasswordPage from 'pages/SetNewPasswordPage';
 
 import './index.scss';
 
@@ -34,6 +36,14 @@ const router = createBrowserRouter([
       {
         path: '/sign-in',
         element: <SignInPage />,
+      },
+      {
+        path: '/forgot-password',
+        element: <ForgotPasswordPage />,
+      },
+      {
+        path: '/set-new-password/:token',
+        element: <SetNewPasswordPage />,
       },
     ],
   },

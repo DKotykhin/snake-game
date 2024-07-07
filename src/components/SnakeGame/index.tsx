@@ -4,6 +4,7 @@ import { Box, Button } from '@mui/material';
 
 import { feedValue } from './feedValue';
 import { CustomDialog } from '../CustomDialog';
+import { gameColors } from './gameColors';
 
 import styles from './snakeGame.module.scss';
 
@@ -95,11 +96,13 @@ const SnakeGame: React.FC = () => {
         if (head.x === food.x && head.y === food.y) {
           setFood({ x: Math.floor(Math.random() * 25), y: Math.floor(Math.random() * 25), value: feedValue() });
 
-          // const newHead1 = { ...head, x: head.x + direction.x, y: head.y + direction.y };
-          // newSnake.unshift(newHead1);
-
-          // const newHead2 = { ...head, x: newHead1.x + direction.x, y: newHead1.y + direction.y };
-          // newSnake.unshift(newHead2);
+          for (let i = 1; i < food.value; i++) {
+            const newSegment = {
+              x: newSnake[newSnake.length - 1].x - direction.x,
+              y: newSnake[newSnake.length - 1].y - direction.y,
+            };
+            newSnake.push(newSegment);
+          }
         } else {
           newSnake.pop();
         }
@@ -122,33 +125,33 @@ const SnakeGame: React.FC = () => {
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     if (food.value === 5) {
-      context.fillStyle = '#cbb102';
-      context.strokeStyle = '#7b5e00';
+      context.fillStyle = gameColors.food_5_body;
+      context.strokeStyle = gameColors.food_5_border;
     } else if (food.value === 10) {
-      context.fillStyle = '#000';
-      context.strokeStyle = '#7b5e00';
+      context.fillStyle = gameColors.food_10_body;
+      context.strokeStyle = gameColors.food_10_border;
     } else {
-      context.fillStyle = '#f15922';
-      context.strokeStyle = '#8b0000';
+      context.fillStyle = gameColors.food_1_body;
+      context.strokeStyle = gameColors.food_1_border;
     }
     context.beginPath();
     context.arc(food.x * 20 + 10, food.y * 20 + 10, 10, 0, 2 * Math.PI);
     context.fill();
     context.lineWidth = 1;
     context.stroke();
-    context.fillStyle = '#fff';
+    context.fillStyle = gameColors.food_number;
     context.font = 'bold 14px Arial';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     context.fillText(`${food.value}`, food.x * 20 + 10, food.y * 20 + 11);
 
-    context.fillStyle = '#00a1b6';
+    context.fillStyle = gameColors.snake_body;
     snake.forEach((segment, index) => {
       context.beginPath();
       context.arc(segment.x * 20 + 10, segment.y * 20 + 10, 10, 0, 2 * Math.PI);
       context.fill();
       if (index === 0) {
-        context.strokeStyle = '#004e58';
+        context.strokeStyle = gameColors.snake_border;
         context.lineWidth = 2;
         context.stroke();
       }
@@ -195,7 +198,9 @@ const SnakeGame: React.FC = () => {
       </Box>
       {!id && (
         <div className={styles.additional_text}>
-          <p>* you need to <Link to={'/sign-in'}>Sign in</Link> to unlock this level</p>
+          <p>
+            * you need to <Link to={'/sign-in'}>Sign in</Link> to unlock this level
+          </p>
         </div>
       )}
       <CustomDialog
