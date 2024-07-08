@@ -1,19 +1,18 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 import { useUserStore } from 'store/userStore';
+import Profile from 'components/Profile';
 
 const UserProfile: React.FC = () => {
   const user = useUserStore((state) => state.userData);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!user.id) {
-      navigate('/');
-    }
-  }, [user, navigate]);
+  if (!user.id) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px', fontSize: '32px' }}>Loading...</div>
+    );
+  }
 
-  return <div>UserProfile</div>;
+  return <Profile user={user} />;
 };
 
 export default UserProfile;

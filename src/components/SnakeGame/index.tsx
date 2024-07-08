@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Box, Button } from '@mui/material';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 import { feedValue } from './feedValue';
 import { CustomDialog } from '../CustomDialog';
 import { gameColors } from './gameColors';
 import { useUserStore } from 'store/userStore';
+import { useRecordsStore } from 'store/recordsStore';
 
 import styles from './snakeGame.module.scss';
 
@@ -16,11 +19,13 @@ const SnakeGame: React.FC = () => {
   const [speed, setSpeed] = useState(500);
   const [gameStatus, setGameStatus] = useState({ start: false, pause: false, over: false });
   const [bestScore, setBestScore] = useState(0);
+  const [userBestScore, setUserBestScore] = useState(0);
   const [level, setLevel] = useState(1);
 
   const canvasRef = useRef(null);
 
   const user = useUserStore((state) => state.userData);
+  const { recordsData, addRecords, updateRecords } = useRecordsStore();
 
   useEffect(() => {
     if (level === 1) {
@@ -31,6 +36,13 @@ const SnakeGame: React.FC = () => {
       setSpeed(300);
     }
   }, [level]);
+
+  useEffect(() => {
+    if (recordsData.length === 0) return;
+    const userRecords = recordsData.filter((record) => record.level === level);
+    if (userRecords.length === 0) return;
+    setUserBestScore(userRecords[0].score);
+  }, [level, recordsData]);
 
   useEffect(() => {
     if (gameStatus.over) return;
@@ -160,6 +172,30 @@ const SnakeGame: React.FC = () => {
     });
   }, [snake, food]);
 
+  const modalCloseHandler = () => {
+    setGameStatus((status) => ({ ...status, over: false }));
+    if (bestScore > userBestScore && user?.id) {
+      axios({
+        method: 'POST',
+        url: `${process.env.REACT_APP_API_URL}/user-records/create`,
+        headers: {
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        data: {
+          level,
+          score: bestScore,
+        },
+      })
+        .then((res) => {
+          console.log(res.data)
+          userBestScore === 0 ? addRecords([res.data]) : updateRecords(res.data);
+        })
+        .catch((err) => {
+          console.log(err.response.data.message || err.message);
+        });
+    }
+  };
+
   return (
     <div className={styles.snake_wrapper}>
       <Box className={styles.level_box}>
@@ -207,15 +243,19 @@ const SnakeGame: React.FC = () => {
       )}
       <CustomDialog
         open={gameStatus.over}
-        handleClose={() => setGameStatus((status) => ({ ...status, over: false }))}
+        handleClose={modalCloseHandler}
         title='Game Over'
         description={
           <div className={styles.score_wrapper}>
+            {bestScore > userBestScore && user?.id && <p className={styles.record_text}>New Record!</p>}
             <p className={styles.score_text}>
               Score: <span>{snake.length - 1}</span>
             </p>
             <p className={styles.score_text}>
               Best Score: <span>{bestScore}</span>
+            </p>
+            <p className={styles.score_text}>
+              Total {bestScore > userBestScore && user?.id && <span>old</span>} Best Score: <span>{userBestScore}</span>
             </p>
           </div>
         }

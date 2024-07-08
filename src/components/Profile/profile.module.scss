@@ -1,0 +1,48 @@
+@import "constants/constants.scss";
+
+.profile_wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 50px;
+
+  .profile_box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+    }
+    
+    .record_box {
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+      border: 1px solid $color_lightGrey;
+      border-radius: 10px;
+      padding: 20px;
+
+      p {
+        font-size: 1.25rem;
+
+        span {
+          font-size: 1.5rem;
+          font-weight: 700;
+        }
+      }
+    }
+
+    .link_box {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+      font-size: 24px;
+      
+      a {
+        color: $color_mint;
+      }
+    }
+  }
+}

@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 
 import logo from '../../images/logo192.png';
 import { useUserStore } from 'store/userStore';
+import { useRecordsStore } from 'store/recordsStore';
 
 import styles from './header.module.scss';
 
@@ -25,6 +26,7 @@ const getFirstLetters = (str: string) => {
 
 const Header = () => {
   const { userData, removeUser } = useUserStore();
+  const { removeRecords } = useRecordsStore();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
@@ -39,6 +41,7 @@ const Header = () => {
   const logoutClick = () => {
     Cookies.remove('token');
     removeUser();
+    removeRecords();
 };
 
   const open = Boolean(anchorEl);
