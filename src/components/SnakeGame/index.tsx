@@ -187,7 +187,6 @@ const SnakeGame: React.FC = () => {
         },
       })
         .then((res) => {
-          console.log(res.data)
           userBestScore === 0 ? addRecords([res.data]) : updateRecords(res.data);
         })
         .catch((err) => {

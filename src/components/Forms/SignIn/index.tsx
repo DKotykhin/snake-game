@@ -11,6 +11,7 @@ import { Button, Container, Typography, Box, Avatar, Paper } from '@mui/material
 import { EmailField, PasswordField } from 'components/Inputs/_index';
 import { signInValidationSchema, SignInTypes } from 'validation/userValidation';
 import { useUserStore } from 'store/userStore';
+import { useRecordsStore } from 'store/recordsStore';
 
 import styles from '../form.module.scss';
 
@@ -32,6 +33,7 @@ const SignInFormValidation: SignInFormValidationTypes = {
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const addUser = useUserStore((state) => state.addUser);
+  const addRecords = useRecordsStore((state) => state.addRecords);
 
   const {
     control,
@@ -50,6 +52,19 @@ const LoginForm: React.FC = () => {
           expires: 2,
         });
         addUser(res.data.user);
+        axios({
+          method: 'GET',
+          url: `${process.env.REACT_APP_API_URL}/user-records`,
+          headers: {
+            Authorization: `Bearer ${res.data?.auth_token}`,
+          },
+        })
+          .then((res) => {
+            addRecords(res.data);
+          })
+          .catch((err) => {
+            console.log(err.response.data.message || err.message);
+          });
         navigate('/');
       })
       .catch((err) => {

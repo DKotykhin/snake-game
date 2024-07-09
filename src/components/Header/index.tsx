@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Typography, Box, Avatar, Popover, Divider } from '@mui/material';
 import Cookies from 'js-cookie';
 
@@ -27,6 +27,7 @@ const getFirstLetters = (str: string) => {
 const Header = () => {
   const { userData, removeUser } = useUserStore();
   const { removeRecords } = useRecordsStore();
+  const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
@@ -42,6 +43,7 @@ const Header = () => {
     Cookies.remove('token');
     removeUser();
     removeRecords();
+    navigate('/sign-in');
 };
 
   const open = Boolean(anchorEl);

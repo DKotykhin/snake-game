@@ -20,7 +20,7 @@ const Profile: React.FC<ProfileProps> = ({ user }) => {
         <h2>{user.userName}</h2>
         <p>email: {user.email}</p>
         <h2>Records</h2>
-        {records.length > 0 ? (
+        {records.length > 0 && records[0]?.id ? (
           records.map((record) => (
             <div key={record.id} className={styles.record_box}>
               <p>
